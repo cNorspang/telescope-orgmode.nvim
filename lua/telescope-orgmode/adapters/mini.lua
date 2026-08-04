@@ -77,7 +77,7 @@ function M.search_headings(user_opts)
   local state = create_state(opts)
   local items = search_headings(state, opts)
 
-  pick.registry.orgmode_headings({ source = { items = {'abc', 'def', 'ghj'} }})
+  pick.registry.orgmode_headings({ source = { items = items }})
 end
 
 ---@param user_opts table|nil
