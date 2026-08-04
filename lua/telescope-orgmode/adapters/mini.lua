@@ -69,7 +69,7 @@ function M.search_headings(user_opts)
   local state = create_state(opts)
   local items = create_finder(state, opts)
 
-  pick.registry.orgmode_headings({ source = { items = items.formatted }})
+  pick.registry.orgmode_headings({ source = { items = items }})
 end
 
 ---@param user_opts table|nil
