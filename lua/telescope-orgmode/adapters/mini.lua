@@ -92,3 +92,6 @@ end
 function M.search_tags(user_opts)
 
 end
+
+
+return M
