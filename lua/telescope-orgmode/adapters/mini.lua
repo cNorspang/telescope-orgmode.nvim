@@ -52,6 +52,8 @@ function M.search_headings(user_opts)
   local state = create_state(opts)
   local items = get_entries(state, opts)
 
+  vim.print(items)
+
   pick.registry.orgmode_headings({
     source = {
       items = items
