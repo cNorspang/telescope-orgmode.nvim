@@ -1,20 +1,27 @@
 local pick = require("mini.pick")
 local operations = require("telescope-orgmode.lib.operations")
+local highlights = require('telescope-orgmode.lib.highlights')
 
 local M = {}
-
-local function open_file()
-  local current = pick.get_picker_matches().current
-  vim.schedule(function()
-    vim.cmd.edit(current)
-  end)
-  return true
-end
 
 local function highlight_line_segment(buf_id, line, start_col, hl_group)
   local opts = { end_row = line, end_col = 0, hl_mode = 'blend', hl_group = hl_group, priority = 999 }
   local ns = vim.api.nvim_create_namespace('MiniOrgPicker')
   vim.api.nvim_buf_set_extmark(buf_id, ns, line - 1, start_col, opts)
+end
+
+local function format(items_arr)
+  local items
+  for _, raw_entry in ipairs(items_arr) do
+    local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, items_arr.opts)
+    table.insert(items, {
+      formatted = segments,
+      text = search_text,
+      file = raw_entry.filename
+    })
+  end
+
+  return items
 end
 
 ---@param buf_id number
@@ -24,7 +31,9 @@ local function show(buf_id, items_arr, query)
   ---@type string[]
   local lines = {}
 
-  for _, x in ipairs(items_arr) do
+  local formatted_items = format(items_arr)
+
+  for _, x in ipairs(formatted_items) do
     local formatted = x.formatted
     local filename = formatted[1][1]
     local tags = formatted[2][1]
