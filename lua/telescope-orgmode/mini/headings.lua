@@ -25,7 +25,7 @@ local function show(buf_id, items_arr, query)
 end
 
 function M.start_picker(local_opts)
-  opts = vim.tbl_deep_extend("keep", local_opts or {}, {
+  local_opts = vim.tbl_deep_extend("keep", local_opts or {}, {
     window = { prompt_prefix = " Heading: "},
     source = {
       name = "Choose Heading",
