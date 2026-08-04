@@ -21,15 +21,14 @@ local function create_finder(state, opts)
     headline_opts.widths = widths
 
     local items = {}
-    items.formatted = {"this", "is", "a", "test"}
-    -- for _, raw_entry in ipairs(results) do
-    --   local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, headline_opts)
-    --   table.insert(items, {
-    --     formatted = segments,
-    --     text = search_text,
-    --     file = raw_entry.filename
-    --   })
-    -- end
+    for _, raw_entry in ipairs(results) do
+      local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, headline_opts)
+      table.insert(items, {
+        formatted = table.sort(segments, function(x, y) return x > y end),
+        text = search_text,
+        file = raw_entry.filename
+      })
+    end
 
     return items
   else
