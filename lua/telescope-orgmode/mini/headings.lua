@@ -10,10 +10,27 @@ local function open_file()
   return true
 end
 
+---@param buf_id number
+---@param items_arr OrgFileEntry[]
+---@param query string[]
+local function show(buf_id, items_arr, query)
+  ---@type string[]
+  local lines = {}
+
+  for i, x in ipairs(items_arr) do
+    local line = x.filename .. "    " .. x.title
+    table.insert(lines, line)
+  end
+  vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
+end
+
 function M.start_picker(local_opts)
   opts = vim.tbl_deep_extend("keep", local_opts or {}, {
     window = { prompt_prefix = " Heading: "},
-    source = { name = "Choose Heading" },
+    source = {
+      name = "Choose Heading",
+      show = show
+    },
     mappings = {
       choose = "",
       toggle_preview = "",
