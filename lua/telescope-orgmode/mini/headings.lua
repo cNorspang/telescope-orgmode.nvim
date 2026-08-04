@@ -11,14 +11,14 @@ local function open_file()
 end
 
 ---@param buf_id number
----@param items_arr OrgFileEntry[]
+---@param items_arr OrgHeadlineEntry[]
 ---@param query string[]
 local function show(buf_id, items_arr, query)
   ---@type string[]
   local lines = {}
 
   for i, x in ipairs(items_arr) do
-    local line = x.filename .. "    " .. (x.title or "")
+    local line = x.filename .. "    " .. x.headline.title
     table.insert(lines, line)
   end
   pick.default_show(buf_id, lines, query)
@@ -29,7 +29,7 @@ function M.start_picker(local_opts)
     window = { prompt_prefix = " Heading: "},
     source = {
       name = "Choose Heading",
-      -- show = show
+      show = show
     },
     mappings = {
       choose = "",
