@@ -24,11 +24,11 @@ local function show(buf_id, items_arr, query)
   local lines = {}
 
 
-  for i, x in ipairs(items_arr.formatted) do
-    vim.print(x)
-    local filename = x[1][1]
-    local tags = x[2][1]
-    local headline = x[5][1]
+  for i, x in ipairs(items_arr) do
+    local formatted = x.formatted
+    local filename = formatted[1][1]
+    local tags = formatted[2][1]
+    local headline = formatted[5][1]
     local line = filename .. tags .. headline
     table.insert(lines, line)
   end
@@ -37,24 +37,25 @@ local function show(buf_id, items_arr, query)
 
   pcall(vim.api.nvim_buf_clear_namespace, buf_id, 'MiniOrgPicker', 0, -1)
   for i, x in ipairs(items_arr) do
+    local formatted = x.formatted
     local column = 0
 
-    local filename = x[1][1]
-    local filename_hl = x[1][2]
+    local filename = formatted[1][1]
+    local filename_hl = formatted[1][2]
     local filename_start_column = column
     local filename_end_column = column + #filename
 
     column = column + #filename + 1
 
-    local tags = x[2][1]
-    local tags_hl = x[2][2]
+    local tags = formatted[2][1]
+    local tags_hl = formatted[2][2]
     local tags_start_column = column
     local tags_end_column = column + #tags
 
     column = column + #tags + 1
 
-    local headline = x[5][1]
-    local headline_hl = x[5][2]
+    local headline = formatted[5][1]
+    local headline_hl = formatted[5][2]
     local headline_start_column = column
     local headline_end_column = column + #headline
 
