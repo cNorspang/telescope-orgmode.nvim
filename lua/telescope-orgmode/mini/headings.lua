@@ -20,7 +20,7 @@ local function show(buf_id, items_arr, query)
   for i, x in ipairs(items_arr) do
     local file_stub = vim.fs.basename(x.filename)
     local line_nr = x.headline.line_number
-    local tags_string = table.concat(x.headline.tags, ":")
+    local tags_string = table.concat(x.headline.all_tags, ":")
     local level_string = string.rep('*', x.headline.level)
 
     -- local line = file_stub .. "    " .. x.headline.title
