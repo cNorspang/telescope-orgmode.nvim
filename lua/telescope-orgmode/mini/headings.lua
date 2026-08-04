@@ -29,7 +29,7 @@ function M.start_picker(local_opts)
     window = { prompt_prefix = " Heading: "},
     source = {
       name = "Choose Heading",
-      show = show
+      -- show = show
     },
     mappings = {
       choose = "",
