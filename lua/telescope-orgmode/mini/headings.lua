@@ -63,7 +63,7 @@ local function make_show(picker_opts)
   return function(buf_id, items_arr, query)
     local items = {}
     for _, raw_entry in ipairs(items_arr) do
-      local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, items_arr.opts)
+      local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, picker_opts)
       table.insert(items, {
         formatted = segments,
         text = search_text,
