@@ -43,21 +43,21 @@ local function show(buf_id, items_arr, query)
     local filename = formatted[1][1]
     local filename_hl = formatted[1][2]
     local filename_start_column = column
-    local filename_end_column = column + #filename
+    local filename_end_column = column + #filename - 1
 
-    column = column + #filename + 1
+    column = column + #filename
 
     local tags = formatted[2][1]
     local tags_hl = formatted[2][2]
     local tags_start_column = column
-    local tags_end_column = column + #tags
+    local tags_end_column = column + #tags - 1
 
-    column = column + #tags + 1
+    column = column + #tags
 
     local headline = formatted[5][1]
     local headline_hl = formatted[5][2]
     local headline_start_column = column
-    local headline_end_column = column + #headline
+    local headline_end_column = column + #headline - 1
 
     highlight_line_segment(buf_id, i, filename_start_column, filename_end_column, filename_hl)
     highlight_line_segment(buf_id, i, tags_start_column, tags_end_column, tags_hl)
