@@ -5,6 +5,7 @@ local config = require('telescope-orgmode.lib.config')
 local PickerState = require('telescope-orgmode.lib.state')
 local orgfiles_entry = require('telescope-orgmode.entry_maker.orgfiles')
 local headlines_entry = require('telescope-orgmode.entry_maker.headlines')
+local opts
 
 local M = {}
 
@@ -31,9 +32,8 @@ local function get_entries(state, opts)
 
     local results, widths = headlines_entry.get_entries(headline_opts)
     headline_opts.widths = widths
-    -- results.opts = headline_opts
 
-    return results
+    return results, headline_opts
   else
     return orgfiles_entry.get_entries(opts)
   end
@@ -59,72 +59,64 @@ local function format(items_arr)
   return items
 end
 
----@param buf_id number
----@param items_arr table[]
----@param query string[]
-local function show(buf_id, items_arr, query)
-  ---@type string[]
-  local lines = {}
+local function make_show(picker_opts)
+  return function(buf_id, items_arr, query)
+    local items = {}
+    for _, raw_entry in ipairs(items_arr) do
+      local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, items_arr.opts)
+      table.insert(items, {
+        formatted = segments,
+        text = search_text,
+        file = raw_entry.filename
+      })
+    end
 
-  local formatted_items = format(items_arr)
+    local lines = {}
+    for _, x in ipairs(items) do
+      local formatted = x.formatted
+      local filename = formatted[1][1]
+      local tags = formatted[2][1]
+      local headline = formatted[5][1]
+      local line = filename .. tags .. headline
+      table.insert(lines, line)
+    end
 
-  for _, x in ipairs(formatted_items) do
-    local formatted = x.formatted
-    local filename = formatted[1][1]
-    local tags = formatted[2][1]
-    local headline = formatted[5][1]
-    local line = filename .. tags .. headline
-    table.insert(lines, line)
-  end
+    pick.default_show(buf_id, lines, query)
 
-  pick.default_show(buf_id, lines, query)
+    pcall(vim.api.nvim_buf_clear_namespace, buf_id, 'MiniOrgPicker', 0, -1)
+    for i, x in ipairs(items) do
+      local formatted = x.formatted
+      local column = 0
 
-  pcall(vim.api.nvim_buf_clear_namespace, buf_id, 'MiniOrgPicker', 0, -1)
-  for i, x in ipairs(items_arr) do
-    local formatted = x.formatted
-    local column = 0
+      local filename = formatted[1][1]
+      local filename_hl = formatted[1][2]
+      local filename_start_column = column
 
-    local filename = formatted[1][1]
-    local filename_hl = formatted[1][2]
-    local filename_start_column = column
+      column = column + #filename
 
-    column = column + #filename
+      local tags = formatted[2][1]
+      local tags_hl = formatted[2][2]
+      local tags_start_column = column
 
-    local tags = formatted[2][1]
-    local tags_hl = formatted[2][2]
-    local tags_start_column = column
+      column = column + #tags
 
-    column = column + #tags
+      local headline = formatted[5][1]
+      local headline_hl = formatted[5][2]
+      local headline_start_column = column
 
-    local headline = formatted[5][1]
-    local headline_hl = formatted[5][2]
-    local headline_start_column = column
-
-    highlight_line_segment(buf_id, i, filename_start_column, filename_hl)
-    highlight_line_segment(buf_id, i, tags_start_column, tags_hl)
-    highlight_line_segment(buf_id, i, headline_start_column, headline_hl)
+      highlight_line_segment(buf_id, i, filename_start_column, filename_hl)
+      highlight_line_segment(buf_id, i, tags_start_column, tags_hl)
+      highlight_line_segment(buf_id, i, headline_start_column, headline_hl)
+    end
   end
 end
 
-function M.register_picker(org_opts)
-  local opts = config:new('search_headings', org_opts)
-  local state = create_state(opts)
-
-  local items = get_entries(state, opts)
-  pick.registry.orgmode_headings({
-    source = {
-      items = items
-    }
-  })
-end
-
-
-function M.start_picker(local_opts)
+function build_picker(items, resolved_opts)
   local_opts = vim.tbl_deep_extend("keep", local_opts or {}, {
     window = { prompt_prefix = " Heading: "},
     source = {
       name = "Choose Heading",
-      show = show,
+      show = make_show(local_opts),
       choose = operations.navigate_to
     },
     mappings = {
@@ -137,6 +129,32 @@ function M.start_picker(local_opts)
   })
 
   return pick.start(local_opts)
+end
+
+function M.register_picker()
+  pick.registry["orgmode_heading"] = build_picker
+end
+
+function M.start_picker(org_opts)
+  opts = config:new('search_headings', org_opts)
+  local state = create_state(opts)
+
+  local items, resolved_opts = get_entries(state, opts)
+
+  local pick_opts = vim.tbl_deep_extend("keep", local_opts or {}, {
+    window = { prompt_prefix = " Heading: "},
+    source = {
+      name = "Choose Heading",
+      items = items,
+      show = make_show(resolved_opts),
+      choose = operations.navigate_to
+    },
+    mappings = {
+      toggle_preview = ""
+    }
+  })
+
+  return pick.start(pick_opts)
 end
 
 return M

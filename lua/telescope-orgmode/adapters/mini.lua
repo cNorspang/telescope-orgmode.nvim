@@ -13,7 +13,6 @@ function M.search_headings(user_opts)
   opts.original_file = vim.api.nvim_buf_get_name(opts.original_buffer)
   opts.current_file = opts.original_file
 
-  headings.register_picker(opts)
   headings.start_picker(opts)
 end
 
