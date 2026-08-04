@@ -45,14 +45,14 @@ local function show(buf_id, items_arr, query)
     local filename_start_column = column
     local filename_end_column = column + #filename
 
-    column = column + #filename + 1
+    column = column + #filename
 
     local tags = formatted[2][1]
     local tags_hl = formatted[2][2]
     local tags_start_column = column
     local tags_end_column = column + #tags
 
-    column = column + #tags + 1
+    column = column + #tags
 
     local headline = formatted[5][1]
     local headline_hl = formatted[5][2]
