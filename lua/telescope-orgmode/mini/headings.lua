@@ -71,23 +71,13 @@ local function show(buf_id, items_arr, query)
   end
 end
 
-local function navigate_to(item)
-  vim.print(item)
-  vim.schedule(
-    function()
-      operations.navigate_to(item)
-    end
-  )
-end
-
-
 function M.start_picker(local_opts)
   local_opts = vim.tbl_deep_extend("keep", local_opts or {}, {
     window = { prompt_prefix = " Heading: "},
     source = {
       name = "Choose Heading",
       show = show,
-      choose = navigate_to
+      choose = operations.navigate_to
     },
     mappings = {
       toggle_preview = ""
