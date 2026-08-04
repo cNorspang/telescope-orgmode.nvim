@@ -117,7 +117,9 @@ function build_picker(items, resolved_opts)
     source = {
       name = "Choose Heading",
       show = make_show(local_opts),
-      choose = operations.navigate_to
+      choose = vim.schedule(
+        operations.navigate_to
+      )
     },
     mappings = {
       toggle_preview = ""
