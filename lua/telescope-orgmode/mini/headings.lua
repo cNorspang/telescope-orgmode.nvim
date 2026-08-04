@@ -67,14 +67,11 @@ function M.start_picker(local_opts)
     window = { prompt_prefix = " Heading: "},
     source = {
       name = "Choose Heading",
-      show = show
+      show = show,
+      choose = operations.navigate_to
     },
     mappings = {
-      choose = "",
-      toggle_preview = "",
-      custom_choose = {
-        char = "<CR>", func = operations.navigate_to
-      }
+      toggle_preview = ""
     }
   })
 
