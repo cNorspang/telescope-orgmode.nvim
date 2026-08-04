@@ -26,33 +26,33 @@ local function search_headings(state, opts)
   end
 end
 
----@param picker_name string
----@param prompt string 
----@param source_name string 
----@param on_select function
----@param items any
-local function register_picker(picker_name, prompt, source_name, on_select, items)
-  opts = vim.tbl_deep_extend("keep", opts or {}, {
-    window = { prompt_prefix = prompt },
-    source = { name = source_name },
-    mappings = {
-      choose = "",
-      toggle_preview = "",
-      custom_choose = {
-        char = "<CR>", func = on_select
-      }
-    }
-  })
-
-  opts = vim.tbl_deep_extend("force", opts, {
-    options = { use_cache = false },
-    source = {
-      items = items
-    }
-  })
-
-  return opts
-end
+-- ---@param picker_name string
+-- ---@param prompt string 
+-- ---@param source_name string 
+-- ---@param on_select function
+-- ---@param items any
+-- local function register_picker(picker_name, prompt, source_name, on_select, items)
+--   opts = vim.tbl_deep_extend("keep", opts or {}, {
+--     window = { prompt_prefix = prompt },
+--     source = { name = source_name },
+--     mappings = {
+--       choose = "",
+--       toggle_preview = "",
+--       custom_choose = {
+--         char = "<CR>", func = on_select
+--       }
+--     }
+--   })
+--
+--   opts = vim.tbl_deep_extend("force", opts, {
+--     options = { use_cache = false },
+--     source = {
+--       items = items
+--     }
+--   })
+--
+--   return opts
+-- end
 
 ---@param opts table
 ---@return PickerState

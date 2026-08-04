@@ -21,7 +21,7 @@ local function show(buf_id, items_arr, query)
     local line = x.filename .. "    " .. x.title
     table.insert(lines, line)
   end
-  vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
+  pick.default_show(buf_id, lines, query)
 end
 
 function M.start_picker(local_opts)
