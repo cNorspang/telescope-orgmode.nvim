@@ -25,9 +25,6 @@ function M.start_picker(local_opts, opts)
 
   opts = vim.tbl_deep_extend("force", opts, {
     options = { use_cache = false },
-    source = {
-      items = picker.get_contexts
-    }
   })
 
   return pick.start(opts)
