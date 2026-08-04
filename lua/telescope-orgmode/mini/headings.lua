@@ -18,7 +18,7 @@ local function show(buf_id, items_arr, query)
   local lines = {}
 
   for i, x in ipairs(items_arr) do
-    local line = x.filename .. "    " .. x.title
+    local line = x.filename .. "    " .. (x.title or "")
     table.insert(lines, line)
   end
   pick.default_show(buf_id, lines, query)
