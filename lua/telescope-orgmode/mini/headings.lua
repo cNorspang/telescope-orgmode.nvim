@@ -20,12 +20,15 @@ local function show(buf_id, items_arr, query)
   for i, x in ipairs(items_arr) do
     local file_stub = vim.fs.basename(x.filename)
     local line_nr = x.headline.line_number
+
     local tags_string = table.concat(x.headline.all_tags, ":")
+    tags_string = ":" .. tags_string .. ":"
+
     local level_string = string.rep('*', x.headline.level)
 
     -- local line = file_stub .. "    " .. x.headline.title
 
-    local line = string.format('%s:%i  %s  %s %s', file_stub, line_nr, tags_string, level_string, x.headline.title)
+    local line = string.format('%15s:%2d%10s%5s%10s', file_stub, line_nr, tags_string, level_string, x.headline.title)
     table.insert(lines, line)
   end
   pick.default_show(buf_id, lines, query)
