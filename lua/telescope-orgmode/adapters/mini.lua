@@ -5,7 +5,7 @@ local headlines_entry = require('telescope-orgmode.entry_maker.headlines')
 local orgfiles_entry = require('telescope-orgmode.entry_maker.orgfiles')
 
 local pick = require('mini.pick')
-require('mini.register_pickers')
+require('telescope-orgmode.mini.register_pickers')
 
 local M = {}
 
