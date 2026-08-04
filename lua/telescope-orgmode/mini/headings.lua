@@ -28,7 +28,7 @@ local function show(buf_id, items_arr, query)
 
     -- local line = file_stub .. "    " .. x.headline.title
 
-    local line = string.format('%15-s:%d%-10s%5-s%10-s', file_stub, line_nr, tags_string, level_string, x.headline.title)
+    local line = string.format('%-15s:%d%-10s%-5s%-10s', file_stub, line_nr, tags_string, level_string, x.headline.title)
     table.insert(lines, line)
   end
   pick.default_show(buf_id, lines, query)
