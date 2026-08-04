@@ -1,4 +1,5 @@
 local pick = require("mini.pick")
+local operations = require("telescope-orgmode.lib.operations")
 
 local M = {}
 
@@ -10,7 +11,7 @@ local function open_file()
   return true
 end
 
-local function highlight_line_segment(buf_id, line, start_col, end_col, hl_group)
+local function highlight_line_segment(buf_id, line, start_col, hl_group)
   local opts = { end_row = line, end_col = 0, hl_mode = 'blend', hl_group = hl_group, priority = 999 }
   local ns = vim.api.nvim_create_namespace('MiniOrgPicker')
   vim.api.nvim_buf_set_extmark(buf_id, ns, line - 1, start_col, opts)
@@ -23,8 +24,7 @@ local function show(buf_id, items_arr, query)
   ---@type string[]
   local lines = {}
 
-
-  for i, x in ipairs(items_arr) do
+  for _, x in ipairs(items_arr) do
     local formatted = x.formatted
     local filename = formatted[1][1]
     local tags = formatted[2][1]
@@ -43,25 +43,22 @@ local function show(buf_id, items_arr, query)
     local filename = formatted[1][1]
     local filename_hl = formatted[1][2]
     local filename_start_column = column
-    local filename_end_column = column + #filename
 
     column = column + #filename
 
     local tags = formatted[2][1]
     local tags_hl = formatted[2][2]
     local tags_start_column = column
-    local tags_end_column = column + #tags
 
     column = column + #tags
 
     local headline = formatted[5][1]
     local headline_hl = formatted[5][2]
     local headline_start_column = column
-    local headline_end_column = column + #headline
 
-    highlight_line_segment(buf_id, i, filename_start_column, filename_end_column, filename_hl)
-    highlight_line_segment(buf_id, i, tags_start_column, tags_end_column, tags_hl)
-    highlight_line_segment(buf_id, i, headline_start_column, headline_end_column, headline_hl)
+    highlight_line_segment(buf_id, i, filename_start_column, filename_hl)
+    highlight_line_segment(buf_id, i, tags_start_column, tags_hl)
+    highlight_line_segment(buf_id, i, headline_start_column, headline_hl)
   end
 end
 
@@ -76,7 +73,7 @@ function M.start_picker(local_opts)
       choose = "",
       toggle_preview = "",
       custom_choose = {
-        char = "<CR>", func = open_file
+        char = "<CR>", func = operations.navigate_to
       }
     }
   })
