@@ -3,14 +3,14 @@ local config = require('telescope-orgmode.lib.config')
 
 local headlines_entry = require('telescope-orgmode.entry_maker.headlines')
 local orgfiles_entry = require('telescope-orgmode.entry_maker.orgfiles')
+local highlights = require('telescope-orgmode.lib.highlights')
 
 local pick = require('mini.pick')
 require('telescope-orgmode.mini.register_pickers')
 
 local M = {}
 
----@param state PickerState
-local function search_headings(state, opts)
+local function create_finder(state, opts)
   local mode = state:get_current()
 
   if mode == 'headlines' then
@@ -20,39 +20,28 @@ local function search_headings(state, opts)
     local results, widths = headlines_entry.get_entries(headline_opts)
     headline_opts.widths = widths
 
-    return results
+    local items = {}
+    for _, raw_entry in ipairs(results) do
+      local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, headline_opts)
+      table.insert(items, {
+        formatted = segments,
+        text = search_text,
+        file = raw_entry.filename
+      })
+    end
+
+    return items
   else
     return orgfiles_entry.get_entries(opts)
   end
 end
 
--- ---@param picker_name string
--- ---@param prompt string 
--- ---@param source_name string 
--- ---@param on_select function
--- ---@param items any
--- local function register_picker(picker_name, prompt, source_name, on_select, items)
---   opts = vim.tbl_deep_extend("keep", opts or {}, {
---     window = { prompt_prefix = prompt },
---     source = { name = source_name },
---     mappings = {
---       choose = "",
---       toggle_preview = "",
---       custom_choose = {
---         char = "<CR>", func = on_select
---       }
---     }
---   })
---
---   opts = vim.tbl_deep_extend("force", opts, {
---     options = { use_cache = false },
---     source = {
---       items = items
---     }
---   })
---
---   return opts
--- end
+---@param state PickerState
+local function create_picker(state, picker_type, base_opts, preserved_query)
+  local picker_config = config:new(picker_type, base_opts)
+  local mode = state:get_current()
+
+end
 
 ---@param opts table
 ---@return PickerState
@@ -74,8 +63,10 @@ function M.search_headings(user_opts)
   opts.original_file = vim.api.nvim_buf_get_name(opts.original_buffer)
   opts.current_file = opts.original_file
 
+  local results, widths = headlines_entry.get_entries({})
+
   local state = create_state(opts)
-  local items = search_headings(state, opts)
+  local items = create_finder(state, opts)
 
   pick.registry.orgmode_headings({ source = { items = items }})
 end
