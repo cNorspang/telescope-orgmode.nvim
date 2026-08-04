@@ -21,14 +21,15 @@ local function create_finder(state, opts)
     headline_opts.widths = widths
 
     local items = {}
-    for _, raw_entry in ipairs(results) do
-      local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, headline_opts)
-      table.insert(items, {
-        formatted = segments,
-        text = search_text,
-        file = raw_entry.filename
-      })
-    end
+    items.formatted = {"this", "is", "a", "test"}
+    -- for _, raw_entry in ipairs(results) do
+    --   local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, headline_opts)
+    --   table.insert(items, {
+    --     formatted = segments,
+    --     text = search_text,
+    --     file = raw_entry.filename
+    --   })
+    -- end
 
     return items
   else
@@ -68,7 +69,7 @@ function M.search_headings(user_opts)
   local state = create_state(opts)
   local items = create_finder(state, opts)
 
-  pick.registry.orgmode_headings({ source = { items = items }})
+  pick.registry.orgmode_headings({ source = { items = items.formatted }})
 end
 
 ---@param user_opts table|nil
