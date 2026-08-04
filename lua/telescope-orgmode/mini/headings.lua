@@ -1,8 +1,43 @@
 local pick = require("mini.pick")
 local operations = require("telescope-orgmode.lib.operations")
-local highlights = require('telescope-orgmode.lib.highlights')
+local highlights = require("telescope-orgmode.lib.highlights")
+local config = require('telescope-orgmode.lib.config')
+local PickerState = require('telescope-orgmode.lib.state')
+local orgfiles_entry = require('telescope-orgmode.entry_maker.orgfiles')
+local headlines_entry = require('telescope-orgmode.entry_maker.headlines')
 
 local M = {}
+
+---@param opts table
+---@return PickerState
+local function create_state(opts)
+  return PickerState:new(opts.mode or 'headlines', {
+    only_current_file = opts.only_current_file or false,
+    current_file = opts.original_file,
+    archived = opts.archived or false,
+    max_depth = opts.max_depth,
+    tag_query = opts.tag_query,
+  })
+end
+
+---@return OrgFileEntry[] | OrgHeadlineEntry[]
+local function get_entries(state, opts)
+  local mode = state:get_current()
+
+  if mode == 'headlines' then
+    ---@type OrgHeadlineEntry[]
+    local filters = state:get_all_filters()
+    local headline_opts = vim.tbl_extend('force', opts, filters)
+
+    local results, widths = headlines_entry.get_entries(headline_opts)
+    headline_opts.widths = widths
+    -- results.opts = headline_opts
+
+    return results
+  else
+    return orgfiles_entry.get_entries(opts)
+  end
+end
 
 local function highlight_line_segment(buf_id, line, start_col, hl_group)
   local opts = { end_row = line, end_col = 0, hl_mode = 'blend', hl_group = hl_group, priority = 999 }
@@ -71,6 +106,19 @@ local function show(buf_id, items_arr, query)
   end
 end
 
+function M.register_picker(org_opts)
+  local opts = config:new('search_headings', org_opts)
+  local state = create_state(opts)
+
+  local items = get_entries(state, opts)
+  pick.registry.orgmode_headings({
+    source = {
+      items = items
+    }
+  })
+end
+
+
 function M.start_picker(local_opts)
   local_opts = vim.tbl_deep_extend("keep", local_opts or {}, {
     window = { prompt_prefix = " Heading: "},
@@ -90,6 +138,5 @@ function M.start_picker(local_opts)
 
   return pick.start(local_opts)
 end
-
 
 return M
