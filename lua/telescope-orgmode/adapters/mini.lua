@@ -21,7 +21,7 @@ local function get_entries(state, opts)
 
     local results, widths = headlines_entry.get_entries(headline_opts)
     headline_opts.widths = widths
-    results.opts = headline_opts
+    -- results.opts = headline_opts
 
     return results
   else
