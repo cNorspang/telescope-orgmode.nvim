@@ -10,8 +10,8 @@ local function open_file()
   return true
 end
 
-function M.start_picker(local_opts, opts)
-  opts = vim.tbl_deep_extend("keep", opts or {}, {
+function M.start_picker(local_opts)
+  opts = vim.tbl_deep_extend("keep", local_opts or {}, {
     window = { prompt_prefix = " Heading: "},
     source = { name = "Choose Heading" },
     mappings = {
@@ -23,11 +23,11 @@ function M.start_picker(local_opts, opts)
     }
   })
 
-  opts = vim.tbl_deep_extend("force", opts, {
+  local_opts = vim.tbl_deep_extend("force", local_opts, {
     options = { use_cache = false },
   })
 
-  return pick.start(opts)
+  return pick.start(local_opts)
 end
 
 
