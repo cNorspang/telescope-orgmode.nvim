@@ -63,6 +63,7 @@ local function show(buf_id, items_arr, query)
 end
 
 local function navigate_to(item)
+  vim.print(item)
   vim.schedule(
     function()
       operations.navigate_to(item)
