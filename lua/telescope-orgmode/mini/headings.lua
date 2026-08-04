@@ -23,9 +23,9 @@ local function show(buf_id, items_arr, query)
   ---@type string[]
   local lines = {}
 
-  print(items_arr)
 
   for i, x in ipairs(items_arr) do
+    vim.print(x)
     local filename = x[1][1]
     local tags = x[2][1]
     local headline = x[5][1]
