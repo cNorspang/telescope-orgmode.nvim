@@ -18,7 +18,14 @@ local function show(buf_id, items_arr, query)
   local lines = {}
 
   for i, x in ipairs(items_arr) do
-    local line = x.filename .. "    " .. x.headline.title
+    local file_stub = vim.fs.basename(x.filename)
+    local line_nr = x.headline.position.start_line
+    local tags_string = table.concat(x.headline.tags, ":")
+    local level_string = string.rep('*', x.headline.level)
+
+    -- local line = file_stub .. "    " .. x.headline.title
+
+    local line = string.format('%s:%i  %s  %s %s', file_stub, line_nr, tags_string, level_string, x.headline.title)
     table.insert(lines, line)
   end
   pick.default_show(buf_id, lines, query)
