@@ -12,11 +12,53 @@ local mini_lib = require('telescope-orgmode.lib.mini')
 
 local M = {}
 
+local function highlight_line_segment(buf_id, line, start_col, hl_group)
+  local opts = { end_row = line, end_col = 0, hl_mode = 'blend', hl_group = hl_group, priority = 999 }
+  local ns = vim.api.nvim_create_namespace('MiniOrgPicker')
+  vim.api.nvim_buf_set_extmark(buf_id, ns, line - 1, start_col, opts)
+end
+
 local function make_show(picker_opts)
   return function(buf_id, items_arr, query)
     local lines = {}
     local items = mini_lib.format(items_arr, picker_opts)
-    vim.print(items)
+
+    for _, x in ipairs(items) do
+      local formatted = x.formatted
+      local filename = formatted[1][1]
+      local tags = formatted[2][1]
+      local headline = formatted[5][1]
+      local line = filename .. tags .. headline
+      table.insert(lines, line)
+    end
+
+    pick.default_show(buf_id, lines, query)
+
+    pcall(vim.api.nvim_buf_clear_namespace, buf_id, 'MiniOrgPicker', 0, -1)
+    for i, x in ipairs(items) do
+      local formatted = x.formatted
+      local column = 0
+
+      local filename = formatted[1][1]
+      local filename_hl = formatted[1][2]
+      local filename_start_column = column
+
+      column = column + #filename
+
+      local tags = formatted[2][1]
+      local tags_hl = formatted[2][2]
+      local tags_start_column = column
+
+      column = column + #tags
+
+      local headline = formatted[5][1]
+      local headline_hl = formatted[5][2]
+      local headline_start_column = column
+
+      highlight_line_segment(buf_id, i, filename_start_column, filename_hl)
+      highlight_line_segment(buf_id, i, tags_start_column, tags_hl)
+      highlight_line_segment(buf_id, i, headline_start_column, headline_hl)
+    end
   end
 end
 
