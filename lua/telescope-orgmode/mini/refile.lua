@@ -1,11 +1,6 @@
-local PickerState = require('telescope-orgmode.lib.state')
-local operations = require('telescope-orgmode.lib.operations')
 local config = require('telescope-orgmode.lib.config')
 local org = require('telescope-orgmode.org')
-local headlines_entry = require('telescope-orgmode.entry_maker.headlines')
-local orgfiles_entry = require('telescope-orgmode.entry_maker.orgfiles')
 local lib_actions = require('telescope-orgmode.lib.actions')
-local keybindings = require('telescope-orgmode.lib.keybindings')
 
 local pick = require('mini.pick')
 local mini_lib = require('telescope-orgmode.lib.mini')

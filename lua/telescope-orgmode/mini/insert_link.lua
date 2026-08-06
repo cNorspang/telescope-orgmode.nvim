@@ -53,3 +53,6 @@ function M.insert_link(org_opts)
 
   return pick.start(pick_opts)
 end
+
+
+return M
