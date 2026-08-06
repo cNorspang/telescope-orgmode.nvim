@@ -54,4 +54,9 @@ function M.refile_heading(org_opts)
       show = make_show(resolved_opts)
     }
   })
+
+  return pick.start(pick_opts)
 end
+
+
+return M
