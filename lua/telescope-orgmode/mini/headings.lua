@@ -1,6 +1,7 @@
 local pick = require("mini.pick")
 local operations = require("telescope-orgmode.lib.operations")
 local highlights = require("telescope-orgmode.lib.highlights")
+local actions = require('telescope-orgmode.lib.actions')
 local config = require('telescope-orgmode.lib.config')
 local PickerState = require('telescope-orgmode.lib.state')
 local orgfiles_entry = require('telescope-orgmode.entry_maker.orgfiles')
@@ -105,11 +106,12 @@ end
 
 local function custom_choose(item)
 
-  vim.print(item.headline)
+  local destination = actions.entry_to_destination(item)
+  vim.print(destination)
 
   vim.api.nvim_win_call(
     pick.get_picker_state().windows.target,
-    function() vim.schedule(function() operations.navigate_to(item.headline) end) end
+    function() vim.schedule(function() operations.navigate_to(destination) end) end
   )
   return false
 end
