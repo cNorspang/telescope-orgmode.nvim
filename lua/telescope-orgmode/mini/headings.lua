@@ -62,7 +62,7 @@ end
 local function make_show(picker_opts)
   return function(buf_id, items_arr, query)
     local lines = {}
-    local items = format(items_arr)
+    local items = format(items_arr, picker_opts)
 
     for _, x in ipairs(items) do
       local formatted = x.formatted
