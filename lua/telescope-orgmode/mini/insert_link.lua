@@ -46,7 +46,7 @@ function M.insert_link(org_opts)
     source = {
       name = "Refile",
       items = items,
-      show = M.make_show(resolved_opts),
+      show = mini_lib.make_show(resolved_opts),
       choose = custom_choose
     }
   })
