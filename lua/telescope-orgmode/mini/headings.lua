@@ -109,7 +109,7 @@ local function custom_choose()
     pick.get_picker_state().windows.target,
     function() operations.navigate_to(current) end
   )
-  return true
+  return false
 end
 
 function build_picker(items, resolved_opts)
