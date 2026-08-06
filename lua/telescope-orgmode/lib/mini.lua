@@ -51,6 +51,13 @@ M.format = function(items_arr, picker_opts)
   return items
 end
 
+
+M.highlight_line_segment = function(buf_id, line, start_col, hl_group)
+  local opts = { end_row = line, end_col = 0, hl_mode = 'blend', hl_group = hl_group, priority = 999 }
+  local ns = vim.api.nvim_create_namespace('MiniOrgPicker')
+  vim.api.nvim_buf_set_extmark(buf_id, ns, line - 1, start_col, opts)
+end
+
 M.make_show = function(picker_opts)
   return function(buf_id, items_arr, query)
     local lines = {}
