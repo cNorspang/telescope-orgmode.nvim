@@ -106,7 +106,9 @@ end
 local function custom_choose(item)
   local current = pick.get_picker_matches().current
 
-  vim.print(item .. "\n" .. '------------' ..  "\n" .. current)
+  vim.print(item)
+  vim.print('-----------------')
+  vim.print(current)
 
   vim.api.nvim_win_call(
     pick.get_picker_state().windows.target,
