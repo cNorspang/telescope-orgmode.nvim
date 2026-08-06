@@ -104,11 +104,8 @@ local function make_show(picker_opts)
 end
 
 local function custom_choose(item)
-  local current = pick.get_picker_matches().current
 
-  vim.print(item)
-  vim.print('-----------------')
-  vim.print(current)
+  vim.print(item.headline)
 
   vim.api.nvim_win_call(
     pick.get_picker_state().windows.target,
