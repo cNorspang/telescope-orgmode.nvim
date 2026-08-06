@@ -69,14 +69,13 @@ M.make_show = function(picker_opts)
     local sections = {}
 
     for _, x in ipairs(items) do
-      vim.print(x)
       local line = "";
       local section_start = 0
       for _, section in ipairs(x.formatted) do
         if not is_blank(section[1]) then
           vim.print(section)
           line = line .. section[1]
-          table.insert(sections, { section = x, start_index = section_start, hl = section[2] })
+          table.insert(sections, { line = x, start_index = section_start, hl = section[2] })
           section_start = section_start + #section[1]
         end
       end
@@ -87,27 +86,7 @@ M.make_show = function(picker_opts)
 
     pcall(vim.api.nvim_buf_clear_namespace, buf_id, 'MiniOrgPicker', 0, -1)
     for i, section in ipairs(sections) do
-      -- local section_delims = {}
-      -- local formatted = x.formatted
-      -- local column = 0
-      --
-      -- local filename = formatted[1][1]
-      -- local filename_hl = formatted[1][2]
-      -- local filename_start_column = column
-      --
-      -- column = column + #filename
-      --
-      -- local tags = formatted[2][1]
-      -- local tags_hl = formatted[2][2]
-      -- local tags_start_column = column
-      --
-      -- column = column + #tags
-      --
-      -- local headline = formatted[5][1]
-      -- local headline_hl = formatted[5][2]
-      -- local headline_start_column = column
-      --
-      M.highlight_line_segment(buf_id, i, section.start_index, section.hl)
+      M.highlight_line_segment(buf_id, section.line, section.start_index, section.hl)
     end
   end
 end
