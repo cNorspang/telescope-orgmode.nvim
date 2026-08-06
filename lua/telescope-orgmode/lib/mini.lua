@@ -62,7 +62,7 @@ M.make_show = function(picker_opts)
   return function(buf_id, items_arr, query)
     local lines = {}
     local items = M.format(items_arr, picker_opts)
-      local sections = {}
+    local sections = {}
 
     for _, x in ipairs(items) do
       vim.print(x)
@@ -70,6 +70,7 @@ M.make_show = function(picker_opts)
       local section_start = 0
       for _, section in ipairs(x) do
         if section[1] ~= "" then
+          vim.print(section)
           line = line .. section[1]
           table.insert(sections, { section = x, start_index = section_start, hl = section[2] })
           section_start = section_start + #section[1]

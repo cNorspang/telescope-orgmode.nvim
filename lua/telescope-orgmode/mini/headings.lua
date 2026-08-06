@@ -92,7 +92,7 @@ function M.start_picker(org_opts)
     source = {
       name = "Choose Heading",
       items = items,
-      show = make_show(resolved_opts),
+      show = mini_lib.make_show(resolved_opts),
       choose = custom_choose
     },
     mappings = {
