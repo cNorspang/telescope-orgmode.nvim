@@ -64,8 +64,10 @@ end
 
 local function custom_choose(source_headline)
   return function(item)
-    local success, message = lib_actions.execute_refile(source_headline, item)
-    vim.notify(message, success and vim.log.levels.INFO or vim.log.levels.WARN)
+    vim.schedule(function()
+      local success, message = lib_actions.execute_refile(source_headline, item)
+      vim.notify(message, success and vim.log.levels.INFO or vim.log.levels.WARN)
+    end)
     return false
   end
 end
