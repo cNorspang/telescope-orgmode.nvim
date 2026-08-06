@@ -64,11 +64,11 @@ M.make_show = function(picker_opts)
     local items = M.format(items_arr, picker_opts)
     local sections = {}
 
-    for _, x in ipairs(items.formatted) do
+    for _, x in ipairs(items) do
       vim.print(x)
       local line = "";
       local section_start = 0
-      for _, section in ipairs(x) do
+      for _, section in ipairs(x.formatted) do
         if section[1] ~= "" then
           vim.print(section)
           line = line .. section[1]
