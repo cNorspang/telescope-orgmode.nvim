@@ -64,7 +64,7 @@ M.make_show = function(picker_opts)
     local items = M.format(items_arr, picker_opts)
     local sections = {}
 
-    for _, x in ipairs(items) do
+    for _, x in ipairs(items.formatted) do
       vim.print(x)
       local line = "";
       local section_start = 0
