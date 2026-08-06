@@ -65,6 +65,7 @@ M.make_show = function(picker_opts)
       local sections = {}
 
     for _, x in ipairs(items) do
+      vim.print(x)
       local line = "";
       local section_start = 0
       for _, section in ipairs(x) do
