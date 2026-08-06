@@ -2,6 +2,7 @@ local PickerState = require('telescope-orgmode.lib.state')
 local headlines_entry = require('telescope-orgmode.entry_maker.headlines')
 local orgfiles_entry = require('telescope-orgmode.entry_maker.orgfiles')
 local highlights = require('telescope-orgmode.lib.highlights')
+local pick = require('mini.pick')
 
 local M = {}
 
@@ -48,6 +49,50 @@ M.format = function(items_arr, picker_opts)
   end
 
   return items
+end
+
+M.make_show = function(picker_opts)
+  return function(buf_id, items_arr, query)
+    local lines = {}
+    local items = M.format(items_arr, picker_opts)
+
+    for _, x in ipairs(items) do
+      local formatted = x.formatted
+      local filename = formatted[1][1]
+      local tags = formatted[2][1]
+      local headline = formatted[5][1]
+      local line = filename .. tags .. headline
+      table.insert(lines, line)
+    end
+
+    pick.default_show(buf_id, lines, query)
+
+    pcall(vim.api.nvim_buf_clear_namespace, buf_id, 'MiniOrgPicker', 0, -1)
+    for i, x in ipairs(items) do
+      local formatted = x.formatted
+      local column = 0
+
+      local filename = formatted[1][1]
+      local filename_hl = formatted[1][2]
+      local filename_start_column = column
+
+      column = column + #filename
+
+      local tags = formatted[2][1]
+      local tags_hl = formatted[2][2]
+      local tags_start_column = column
+
+      column = column + #tags
+
+      local headline = formatted[5][1]
+      local headline_hl = formatted[5][2]
+      local headline_start_column = column
+
+      M.highlight_line_segment(buf_id, i, filename_start_column, filename_hl)
+      M.highlight_line_segment(buf_id, i, tags_start_column, tags_hl)
+      M.highlight_line_segment(buf_id, i, headline_start_column, headline_hl)
+    end
+  end
 end
 
 return M

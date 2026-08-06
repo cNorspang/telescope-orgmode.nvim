@@ -1,6 +1,7 @@
 local config = require('telescope-orgmode.lib.config')
 local headings = require('telescope-orgmode.mini.headings')
 local refile = require('telescope-orgmode.mini.refile')
+local insert_link = require('telescope-orgmode.mini.insert_link')
 
 require('telescope-orgmode.mini.register_pickers')
 
@@ -8,29 +9,17 @@ local M = {}
 
 ---@param user_opts table|nil
 function M.search_headings(user_opts)
-  local opts = config:new('search_headings', user_opts)
-
-  opts.original_buffer = vim.api.nvim_get_current_buf()
-  opts.original_file = vim.api.nvim_buf_get_name(opts.original_buffer)
-  opts.current_file = opts.original_file
-
-  headings.start_picker(opts)
+  headings.start_picker(user_opts)
 end
 
 ---@param user_opts table|nil
 function M.refile_heading(user_opts)
-  local opts = config:new('refile_heading', user_opts)
-
-  opts.original_buffer = vim.api.nvim_get_current_buf()
-  opts.original_file = vim.api.nvim_buf_get_name(opts.original_buffer)
-  opts.current_file = opts.original_file
-
-  refile.refile_heading(opts)
+  refile.refile_heading(user_opts)
 end
 
 ---@param user_opts table|nil
 function M.insert_link(user_opts)
-  
+  insert_link.insert_link(user_opts)
 end
 
 ---@param user_opts table|nil
