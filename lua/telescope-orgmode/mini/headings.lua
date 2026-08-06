@@ -45,10 +45,10 @@ local function highlight_line_segment(buf_id, line, start_col, hl_group)
   vim.api.nvim_buf_set_extmark(buf_id, ns, line - 1, start_col, opts)
 end
 
-local function format(items_arr)
+local function format(items_arr, picker_opts)
   local items
   for _, raw_entry in ipairs(items_arr) do
-    local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, items_arr.opts)
+    local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, picker_opts)
     table.insert(items, {
       formatted = segments,
       text = search_text,
@@ -61,17 +61,9 @@ end
 
 local function make_show(picker_opts)
   return function(buf_id, items_arr, query)
-    local items = {}
-    for _, raw_entry in ipairs(items_arr) do
-      local segments, search_text = highlights.get_headline_segments(raw_entry.headline, raw_entry.filename, picker_opts)
-      table.insert(items, {
-        formatted = segments,
-        text = search_text,
-        file = raw_entry.filename
-      })
-    end
-
     local lines = {}
+    local items = format(items_arr)
+
     for _, x in ipairs(items) do
       local formatted = x.formatted
       local filename = formatted[1][1]
@@ -111,15 +103,18 @@ local function make_show(picker_opts)
   end
 end
 
+local function custom_choose()
+  local current = pick.get_picker_matches().current
+  vim.schedule(function() operations.navigate_to(current) end)
+end
+
 function build_picker(items, resolved_opts)
   local_opts = vim.tbl_deep_extend("keep", local_opts or {}, {
     window = { prompt_prefix = " Heading: "},
     source = {
       name = "Choose Heading",
       show = make_show(local_opts),
-      choose = vim.schedule(
-        operations.navigate_to
-      )
+      choose = custom_choose
     },
     mappings = {
       toggle_preview = ""
