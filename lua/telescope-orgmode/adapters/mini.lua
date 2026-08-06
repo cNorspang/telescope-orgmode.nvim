@@ -1,5 +1,6 @@
 local config = require('telescope-orgmode.lib.config')
 local headings = require('telescope-orgmode.mini.headings')
+local refile = require('telescope-orgmode.mini.refile')
 
 require('telescope-orgmode.mini.register_pickers')
 
@@ -18,6 +19,13 @@ end
 
 ---@param user_opts table|nil
 function M.refile_heading(user_opts)
+  local opts = config:new('refile_heading', user_opts)
+
+  opts.original_buffer = vim.api.nvim_get_current_buf()
+  opts.original_file = vim.api.nvim_buf_get_name(opts.original_buffer)
+  opts.current_file = opts.original_file
+
+  refile.refile_heading(opts)
 end
 
 ---@param user_opts table|nil

@@ -1,0 +1,57 @@
+local PickerState = require('telescope-orgmode.lib.state')
+local operations = require('telescope-orgmode.lib.operations')
+local config = require('telescope-orgmode.lib.config')
+local org = require('telescope-orgmode.org')
+local headlines_entry = require('telescope-orgmode.entry_maker.headlines')
+local orgfiles_entry = require('telescope-orgmode.entry_maker.orgfiles')
+local lib_actions = require('telescope-orgmode.lib.actions')
+local keybindings = require('telescope-orgmode.lib.keybindings')
+
+local pick = require('mini.pick')
+local mini_lib = require('telescope-orgmode.lib.mini')
+
+local M = {}
+
+local function make_show(picker_opts)
+  return function(buf_id, items_arr, query)
+    vim.print(items_arr)
+  end
+end
+
+function M.refile_heading(org_opts)
+  local opts = config:new('refile_heading', user_opts)
+
+  opts.original_buffer = vim.api.nvim_get_current_buf()
+  opts.original_file = vim.api.nvim_buf_get_name(opts.original_buffer)
+  opts.current_file = opts.original_file
+
+  local source_headline = org.get_closest_headline()
+
+  if not source_headline then
+    local filetype = vim.bo.filetype
+    if filetype == 'org' then
+      vim.notify('No headline found at cursor position in org file', vim.log.levels.WARN)
+    else
+      vim.notify(
+        'No headline found at cursor position. Make sure cursor is on a valid agenda item or org headline.',
+        vim.log.levels.WARN
+      )
+    end
+    return
+  end
+
+  local state = mini_lib.create_state(opts)
+  local items, resolved_opts = mini_lib.get_entries(state, opts)
+
+  local base_title = opts.prompt_titles[state:get_current()]
+  local full_title = state:get_full_title(base_title)
+
+  local pick_opts = vim.tbl_deep_extend("keep", org_opts or {}, {
+    window = { prompt_prefix = full_title },
+    source = {
+      name = "Refile",
+      items = items,
+      show = make_show(resolved_opts)
+    }
+  })
+end

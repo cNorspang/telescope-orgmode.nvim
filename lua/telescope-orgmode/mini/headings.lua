@@ -6,39 +6,11 @@ local config = require('telescope-orgmode.lib.config')
 local PickerState = require('telescope-orgmode.lib.state')
 local orgfiles_entry = require('telescope-orgmode.entry_maker.orgfiles')
 local headlines_entry = require('telescope-orgmode.entry_maker.headlines')
+local mini_lib = require('telescope-orgmode.lib.mini')
 local opts
 
 local M = {}
 
----@param opts table
----@return PickerState
-local function create_state(opts)
-  return PickerState:new(opts.mode or 'headlines', {
-    only_current_file = opts.only_current_file or false,
-    current_file = opts.original_file,
-    archived = opts.archived or false,
-    max_depth = opts.max_depth,
-    tag_query = opts.tag_query,
-  })
-end
-
----@return OrgFileEntry[] | OrgHeadlineEntry[]
-local function get_entries(state, opts)
-  local mode = state:get_current()
-
-  if mode == 'headlines' then
-    ---@type OrgHeadlineEntry[]
-    local filters = state:get_all_filters()
-    local headline_opts = vim.tbl_extend('force', opts, filters)
-
-    local results, widths = headlines_entry.get_entries(headline_opts)
-    headline_opts.widths = widths
-
-    return results, headline_opts
-  else
-    return orgfiles_entry.get_entries(opts)
-  end
-end
 
 local function highlight_line_segment(buf_id, line, start_col, hl_group)
   local opts = { end_row = line, end_col = 0, hl_mode = 'blend', hl_group = hl_group, priority = 999 }
@@ -140,9 +112,9 @@ end
 
 function M.start_picker(org_opts)
   opts = config:new('search_headings', org_opts)
-  local state = create_state(opts)
+  local state = mini_lib.create_state(opts)
 
-  local items, resolved_opts = get_entries(state, opts)
+  local items, resolved_opts = mini_lib.get_entries(state, opts)
 
   local pick_opts = vim.tbl_deep_extend("keep", local_opts or {}, {
     window = { prompt_prefix = " Heading: "},
@@ -158,6 +130,36 @@ function M.start_picker(org_opts)
   })
 
   return pick.start(pick_opts)
+end
+
+function M.refile_heading(user_opts)
+  local opts = config:new('refile_heading', user_opts)
+
+  opts.original_buffer = vim.api.nvim_get_current_buf()
+  opts.original_file = vim.api.nvim_buf_get_name(opts.original_buffer)
+  opts.current_file = opts.original_file
+
+  local source_headline = org.get_closest_headline()
+
+  if not source_headline then
+    local filetype = vim.bo.filetype
+    if filetype == 'org' then
+      vim.notify('No headline found at cursor position in org file', vim.log.levels.WARN)
+    else
+      vim.notify(
+        'No headline found at cursor position. Make sure cursor is on a valid agenda item or org headline.',
+        vim.log.levels.WARN
+      )
+    end
+    return
+  end
+
+  local state = mini_lib.create_state(opts)
+  local entries = mini_lib.get_entries(state, opts)
+
+  local function refile_action(prompt_bufnr)
+    local entry = pick.get_picker_matches().current
+  end
 end
 
 return M
