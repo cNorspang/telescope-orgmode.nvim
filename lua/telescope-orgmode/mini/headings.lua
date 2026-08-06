@@ -103,11 +103,10 @@ local function make_show(picker_opts)
   end
 end
 
-local function custom_choose()
-  local current = pick.get_picker_matches().current
+local function custom_choose(item)
   vim.api.nvim_win_call(
     pick.get_picker_state().windows.target,
-    function() vim.schedule(function() operations.navigate_to(current) end) end
+    function() vim.schedule(function() operations.navigate_to(item) end) end
   )
   return false
 end
