@@ -108,7 +108,7 @@ local function custom_choose(item)
   local current = pick.get_picker_matches().current
   vim.api.nvim_win_call(
     pick.get_picker_state().windows.target,
-    function() vim.schedule(function() operations.navigate_to(current) end) end
+    function() vim.schedule(function() operations.navigate_to(current.headline) end) end
   )
   return false
 end
