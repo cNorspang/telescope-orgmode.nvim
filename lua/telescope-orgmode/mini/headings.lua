@@ -104,6 +104,7 @@ local function make_show(picker_opts)
 end
 
 local function custom_choose(item)
+  vim.print(item)
   local current = pick.get_picker_matches().current
   vim.api.nvim_win_call(
     pick.get_picker_state().windows.target,
