@@ -6,6 +6,10 @@ local pick = require('mini.pick')
 
 local M = {}
 
+local function is_blank(input)
+  local blank = (input == nil or #string.gsub(input, "^%s*(.-)%s*$", "%1") == 0)
+  return blank
+end
 
 ---@param opts table
 ---@return PickerState
@@ -69,7 +73,7 @@ M.make_show = function(picker_opts)
       local line = "";
       local section_start = 0
       for _, section in ipairs(x.formatted) do
-        if section[1] ~= "" then
+        if not is_blank(section[1]) then
           vim.print(section)
           line = line .. section[1]
           table.insert(sections, { section = x, start_index = section_start, hl = section[2] })
