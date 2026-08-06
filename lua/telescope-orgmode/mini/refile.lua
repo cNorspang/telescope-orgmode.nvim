@@ -14,7 +14,9 @@ local M = {}
 
 local function make_show(picker_opts)
   return function(buf_id, items_arr, query)
-    vim.print(items_arr)
+    local lines = {}
+    local items = mini_lib.format(items_arr, picker_opts)
+    vim.print(items)
   end
 end
 
