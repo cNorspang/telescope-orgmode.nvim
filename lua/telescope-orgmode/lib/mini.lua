@@ -68,14 +68,14 @@ M.make_show = function(picker_opts)
     local items = M.format(items_arr, picker_opts)
     local sections = {}
 
-    for _, x in ipairs(items) do
+    for i, x in ipairs(items) do
       local line = "";
       local section_start = 0
       for _, section in ipairs(x.formatted) do
         if not is_blank(section[1]) then
           vim.print(section)
           line = line .. section[1]
-          table.insert(sections, { line = x, start_index = section_start, hl = section[2] })
+          table.insert(sections, { line = i, start_index = section_start, hl = section[2] })
           section_start = section_start + #section[1]
         end
       end
