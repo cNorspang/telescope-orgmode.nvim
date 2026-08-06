@@ -62,6 +62,14 @@ local function make_show(picker_opts)
   end
 end
 
+local function custom_choose(source_headline)
+  return function(item)
+    local success, message = lib_actions.execute_refile(source_headline, item)
+    vim.notify(message, success and vim.log.levels.INFO or vim.log.levels.WARN)
+    return false
+  end
+end
+
 function M.refile_heading(org_opts)
   local opts = config:new('refile_heading', user_opts)
 
@@ -95,7 +103,8 @@ function M.refile_heading(org_opts)
     source = {
       name = "Refile",
       items = items,
-      show = make_show(resolved_opts)
+      show = make_show(resolved_opts),
+      choose = custom_choose(source_headline)
     }
   })
 
