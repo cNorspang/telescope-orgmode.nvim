@@ -118,10 +118,11 @@ function build_picker(items, resolved_opts)
     source = {
       name = "Choose Heading",
       show = make_show(local_opts),
-      choose = custom_choose
     },
     mappings = {
-      toggle_preview = ""
+      choose = "",
+      custom_choose = { char = "<CR>", func = custom_choose },
+      toggle_preview = "",
     }
   })
 
