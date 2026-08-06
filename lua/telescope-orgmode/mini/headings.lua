@@ -149,7 +149,7 @@ function M.start_picker(org_opts)
       name = "Choose Heading",
       items = items,
       show = make_show(resolved_opts),
-      choose = operations.navigate_to
+      choose = custom_choose
     },
     mappings = {
       toggle_preview = ""
