@@ -85,7 +85,7 @@ M.make_show = function(picker_opts)
     pick.default_show(buf_id, lines, query)
 
     pcall(vim.api.nvim_buf_clear_namespace, buf_id, 'MiniOrgPicker', 0, -1)
-    for i, section in ipairs(sections) do
+    for _, section in ipairs(sections) do
       M.highlight_line_segment(buf_id, section.line, section.start_index, section.hl)
     end
   end

@@ -18,7 +18,7 @@ local function custom_choose(source_headline)
 end
 
 function M.refile_heading(org_opts)
-  local opts = config:new('refile_heading', user_opts)
+  local opts = config:new('refile_heading', org_opts)
 
   opts.original_buffer = vim.api.nvim_get_current_buf()
   opts.original_file = vim.api.nvim_buf_get_name(opts.original_buffer)
@@ -51,7 +51,7 @@ function M.refile_heading(org_opts)
     source = {
       name = "Refile",
       items = items,
-      show = M.make_show(resolved_opts),
+      show = mini_lib.make_show(resolved_opts),
       choose = custom_choose(source_headline)
     }
   })

@@ -2,6 +2,7 @@ local config = require('telescope-orgmode.lib.config')
 local headings = require('telescope-orgmode.mini.headings')
 local refile = require('telescope-orgmode.mini.refile')
 local insert_link = require('telescope-orgmode.mini.insert_link')
+local search_tags = require('telescope-orgmode.mini.search_tags')
 
 require('telescope-orgmode.mini.register_pickers')
 
@@ -24,8 +25,7 @@ end
 
 ---@param user_opts table|nil
 function M.search_tags(user_opts)
-
+  search_tags.search_tags(user_opts)
 end
-
 
 return M
