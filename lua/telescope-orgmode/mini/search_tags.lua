@@ -22,11 +22,13 @@ function M.search_tags(org_opts)
     return
   end
 
-  for _, tag_info in ipairs(tags) do
-    local tag = tag_info.tag
-    local lines = tags_lib.get_tag_preview_lines(tag, { max_count = 50 })
-    vim.print(lines)
-  end
+  vim.print(tags)
+
+  -- for _, tag_info in ipairs(tags) do
+  --   local tag = tag_info.tag
+  --   local lines = tags_lib.get_tag_preview_lines(tag, { max_count = 50 })
+  --   vim.print(lines)
+  -- end
 
 end
 
