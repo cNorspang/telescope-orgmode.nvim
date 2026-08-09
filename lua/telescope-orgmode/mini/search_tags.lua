@@ -8,6 +8,31 @@ local mini_lib = require('telescope-orgmode.lib.mini')
 
 local M = {}
 
+local function custom_show(items_arr, picker_opts)
+  local items = {}
+  for _, raw_entry in ipairs(items_arr) do
+    
+  end
+end
+
+-- Needs to show  
+-- <tag> (count)
+-- preview should be
+---- Heading
+---- -> ~/path/to/file.org
+---
+local function make_show(picker_opts)
+  return function(buf_id, items_arr, query)
+    local lines = {}
+    for _, item in ipairs(items_arr) do
+      local line = item.tag .. " (" .. item.count .. ")"
+      table.insert(lines, line)
+    end
+
+    pick.default_show(buf_id, lines, query)
+  end
+end
+
 function M.search_tags(org_opts)
   local opts = config:new('search_tags', org_opts)
 
@@ -21,15 +46,26 @@ function M.search_tags(org_opts)
     vim.notify('No tags found in org files', vim.log.levels.INFO)
     return
   end
+  -- vim.print(tags)
+  --
+  local items = {}
 
-  vim.print(tags)
+  for _, tag_info in ipairs(tags) do
+    local tag = tag_info.tag
+    local lines = tags_lib.get_tag_preview_lines(tag, { max_count = 50 })
+    table.insert(items, lines)
+  end
 
-  -- for _, tag_info in ipairs(tags) do
-  --   local tag = tag_info.tag
-  --   local lines = tags_lib.get_tag_preview_lines(tag, { max_count = 50 })
-  --   vim.print(lines)
-  -- end
+  local pick_opts = vim.tbl_deep_extend("keep", org_opts or {}, {
+    window = { prompt_prefix = " Tag: " },
+    source = {
+      name = "Choose Tag",
+      items = items,
+      show = custom_show(org_opts)
+    }
+  })
 
+  return pick.start(pick_opts)
 end
 
 return M
