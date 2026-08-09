@@ -25,6 +25,7 @@ local function make_show(picker_opts)
   return function(buf_id, items_arr, query)
     local lines = {}
     for _, item in ipairs(items_arr) do
+      vim.print(item)
       local line = item.tag .. " (" .. item.count .. ")"
       table.insert(lines, line)
     end
