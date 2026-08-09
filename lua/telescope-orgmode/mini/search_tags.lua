@@ -74,8 +74,6 @@ function M.search_tags(org_opts)
 
   local items = copy_to_text_property(tags, "tag")
 
-  vim.print(items)
-
   local pick_opts = vim.tbl_deep_extend("keep", org_opts or {}, {
     window = { prompt_prefix = " Tag: " },
     source = {
