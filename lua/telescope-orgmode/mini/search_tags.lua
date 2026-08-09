@@ -47,11 +47,8 @@ local function custom_choose(item)
 end
 
 local function preview(buf_id, item)
-  local preview_buf = vim.api.nvim_create_buf(false, true)
   local lines = tags_lib.get_tag_preview_lines(item.tag, { max_count = 50 })
-
-  vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, lines)
-  vim.api.nvim_open_win(preview_buf, false, { split = 'right', win = buf_id })
+  vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
 end
 
 local function copy_to_text_property(items, original_property_name)
@@ -77,6 +74,8 @@ function M.search_tags(org_opts)
 
   local items = copy_to_text_property(tags, "tag")
 
+  vim.print(items)
+
   local pick_opts = vim.tbl_deep_extend("keep", org_opts or {}, {
     window = { prompt_prefix = " Tag: " },
     source = {
@@ -84,7 +83,7 @@ function M.search_tags(org_opts)
       items = items,
       show = make_show(org_opts),
       choose = custom_choose,
-      -- preview = preview
+      preview = preview
     }
   })
 
