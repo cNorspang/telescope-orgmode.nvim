@@ -80,7 +80,7 @@ function M.search_tags(org_opts)
     table.insert(items, lines)
   end
 
-  items = copy_to_text_property(items, "tag")
+  local items = copy_to_text_property(tags, "tag")
 
   vim.print(items)
 
@@ -88,7 +88,7 @@ function M.search_tags(org_opts)
     window = { prompt_prefix = " Tag: " },
     source = {
       name = "Choose Tag",
-      items = tags,
+      items = items,
       show = make_show(org_opts),
       choose = custom_choose,
       preview = preview
