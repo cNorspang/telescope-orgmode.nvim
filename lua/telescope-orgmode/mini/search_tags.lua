@@ -8,12 +8,12 @@ local mini_lib = require('telescope-orgmode.lib.mini')
 
 local M = {}
 
-local function custom_show(items_arr, picker_opts)
-  local items = {}
-  for _, raw_entry in ipairs(items_arr) do
-    
-  end
-end
+-- local function custom_show(items_arr, picker_opts)
+--   local items = {}
+--   for _, raw_entry in ipairs(items_arr) do
+--
+--   end
+-- end
 
 -- Needs to show  
 -- <tag> (count)
@@ -61,7 +61,7 @@ function M.search_tags(org_opts)
     source = {
       name = "Choose Tag",
       items = items,
-      show = custom_show(org_opts)
+      show = make_show(org_opts)
     }
   })
 
