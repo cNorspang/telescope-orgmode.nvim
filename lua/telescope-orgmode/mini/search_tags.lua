@@ -46,6 +46,11 @@ local function custom_choose(item)
   return false
 end
 
+local function preview(buf_id, item)
+  local lines = tags_lib.get_tag_preview_lines(item.tag, { max_count = 50 })
+  vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
+end
+
 function M.search_tags(org_opts)
   local opts = config:new('search_tags', org_opts)
 
@@ -74,7 +79,8 @@ function M.search_tags(org_opts)
       name = "Choose Tag",
       items = tags,
       show = make_show(org_opts),
-      choose = custom_choose
+      choose = custom_choose,
+      preview = preview
     }
   })
 
