@@ -1,37 +1,19 @@
 local config = require('telescope-orgmode.lib.config')
-local org = require('telescope-orgmode.org')
-local lib_actions = require('telescope-orgmode.lib.actions')
 local tags_lib = require('telescope-orgmode.lib.tags')
 
 local pick = require('mini.pick')
 local mini_headings = require('telescope-orgmode.mini.headings')
-local mini_lib = require('telescope-orgmode.lib.mini')
 
 local M = {}
 
--- local function custom_show(items_arr, picker_opts)
---   local items = {}
---   for _, raw_entry in ipairs(items_arr) do
---
---   end
--- end
-
--- Needs to show  
--- <tag> (count)
--- preview should be
----- Heading
----- -> ~/path/to/file.org
----
-local function make_show(picker_opts)
-  return function(buf_id, items_arr, query)
-    local lines = {}
-    for _, item in ipairs(items_arr) do
-      local line = item.tag .. " (" .. item.count .. ")"
-      table.insert(lines, line)
-    end
-
-    pick.default_show(buf_id, lines, query)
+local function show(buf_id, items_arr, query)
+  local lines = {}
+  for _, item in ipairs(items_arr) do
+    local line = item.tag .. " (" .. item.count .. ")"
+    table.insert(lines, line)
   end
+
+  pick.default_show(buf_id, lines, query)
 end
 
 local function custom_choose(item)
@@ -79,7 +61,7 @@ function M.search_tags(org_opts)
     source = {
       name = "Choose Tag",
       items = items,
-      show = make_show(org_opts),
+      show = show,
       choose = custom_choose,
       preview = preview
     }
