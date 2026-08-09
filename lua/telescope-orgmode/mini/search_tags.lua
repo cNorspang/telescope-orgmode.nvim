@@ -51,7 +51,7 @@ local function preview(buf_id, item)
   local lines = tags_lib.get_tag_preview_lines(item.tag, { max_count = 50 })
 
   vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, lines)
-  vim.api.nvim_open_win(preview_buf, false, { split = 'right' })
+  vim.api.nvim_open_win(preview_buf, false, { split = 'right', win = buf_id })
 end
 
 local function copy_to_text_property(items, original_property_name)
