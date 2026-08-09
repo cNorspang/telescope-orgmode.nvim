@@ -26,7 +26,6 @@ local function make_show(picker_opts)
   return function(buf_id, items_arr, query)
     local lines = {}
     for _, item in ipairs(items_arr) do
-      vim.print(item)
       local line = item.tag .. " (" .. item.count .. ")"
       table.insert(lines, line)
     end
@@ -60,8 +59,7 @@ function M.search_tags(org_opts)
     vim.notify('No tags found in org files', vim.log.levels.INFO)
     return
   end
-  -- vim.print(tags)
-  --
+
   local items = {}
 
   for _, tag_info in ipairs(tags) do
