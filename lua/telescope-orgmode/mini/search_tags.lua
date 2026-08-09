@@ -47,8 +47,11 @@ local function custom_choose(item)
 end
 
 local function preview(buf_id, item)
+  local preview_buf = vim.api.nvim_create_buf(false, true)
   local lines = tags_lib.get_tag_preview_lines(item.tag, { max_count = 50 })
-  vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
+
+  vim.api.nvim_buf_set_lines(preview_buf, 0, -1, false, lines)
+  vim.api.nvim_open_win(preview_buf, false, { split = 'right' })
 end
 
 local function copy_to_text_property(items, original_property_name)
@@ -70,14 +73,6 @@ function M.search_tags(org_opts)
   if #tags == 0 then
     vim.notify('No tags found in org files', vim.log.levels.INFO)
     return
-  end
-
-  local items = {}
-
-  for _, tag_info in ipairs(tags) do
-    local tag = tag_info.tag
-    local lines = tags_lib.get_tag_preview_lines(tag, { max_count = 50 })
-    table.insert(items, lines)
   end
 
   local items = copy_to_text_property(tags, "tag")
