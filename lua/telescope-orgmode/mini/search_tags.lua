@@ -51,6 +51,13 @@ local function preview(buf_id, item)
   vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
 end
 
+local function copy_to_text_property(items, original_property_name)
+  for _, item in ipairs(items) do
+    item.text = item[original_property_name]
+  end
+  return items
+end
+
 function M.search_tags(org_opts)
   local opts = config:new('search_tags', org_opts)
 
@@ -72,6 +79,8 @@ function M.search_tags(org_opts)
     local lines = tags_lib.get_tag_preview_lines(tag, { max_count = 50 })
     table.insert(items, lines)
   end
+
+  items = copy_to_text_property(items, "tag")
 
   local pick_opts = vim.tbl_deep_extend("keep", org_opts or {}, {
     window = { prompt_prefix = " Tag: " },
