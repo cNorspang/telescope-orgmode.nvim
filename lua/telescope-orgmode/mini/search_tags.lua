@@ -61,7 +61,7 @@ function M.search_tags(org_opts)
     window = { prompt_prefix = " Tag: " },
     source = {
       name = "Choose Tag",
-      items = items,
+      items = tags,
       show = make_show(org_opts)
     }
   })
