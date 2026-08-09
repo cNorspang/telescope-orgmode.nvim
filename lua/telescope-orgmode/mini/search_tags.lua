@@ -4,6 +4,7 @@ local lib_actions = require('telescope-orgmode.lib.actions')
 local tags_lib = require('telescope-orgmode.lib.tags')
 
 local pick = require('mini.pick')
+local mini_headings = require('telescope-orgmode.mini.headings')
 local mini_lib = require('telescope-orgmode.lib.mini')
 
 local M = {}
@@ -34,6 +35,18 @@ local function make_show(picker_opts)
   end
 end
 
+local function custom_choose(item)
+  mini_headings.start_picker({
+    tag_query = '+' .. item.tag,
+    default_text = '',
+    context = {
+      selected_tag = item.tag
+    }
+  })
+
+  return false
+end
+
 function M.search_tags(org_opts)
   local opts = config:new('search_tags', org_opts)
 
@@ -62,7 +75,8 @@ function M.search_tags(org_opts)
     source = {
       name = "Choose Tag",
       items = tags,
-      show = make_show(org_opts)
+      show = make_show(org_opts),
+      choose = custom_choose
     }
   })
 
