@@ -1,5 +1,7 @@
 local mini_pick = require('mini.pick')
 
+-- Are sideeffects or a require in Lua bad pratice?
+-- Should i instead wrap the module with a table, and then have a register_pickers function?
 require('telescope-orgmode.mini.register_pickers')
 
 local M = {}
