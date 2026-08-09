@@ -20,6 +20,9 @@ local function get_adapter(name)
   local ok, adapter = pcall(require, 'telescope-orgmode.adapters.' .. requested)
 
   if not ok then
+    error(
+      string.format('Loading adapter failed with "%s"', adapter)
+    )
     local fallback_ok, fallback_adapter = pcall(require, 'telescope-orgmode.adapters.telescope')
     if fallback_ok then
       vim.notify(
@@ -75,7 +78,7 @@ function M.search_tags(opts)
 end
 
 ---Set the active adapter at runtime
----@param name 'telescope'|'snacks'
+---@param name 'telescope'|'snacks'|'mini'
 function M.set_adapter(name)
   adapter_name = name
   active_adapter = nil -- Force reload on next call
