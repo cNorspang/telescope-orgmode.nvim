@@ -48,7 +48,8 @@ M.format = function(items_arr, picker_opts)
     table.insert(items, {
       formatted = segments,
       text = search_text,
-      file = raw_entry.filename
+      file = raw_entry.filename,
+      headline = raw_entry.headline
     })
   end
 
