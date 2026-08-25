@@ -6,6 +6,8 @@ local pick = require('mini.pick')
 
 local M = {}
 
+local ns = vim.api.nvim_create_namespace('MiniOrgPicker')
+
 local function is_blank(input)
   local blank = (input == nil or #string.gsub(input, "^%s*(.-)%s*$", "%1") == 0)
   return blank
@@ -59,7 +61,6 @@ end
 
 M.highlight_line_segment = function(buf_id, line, start_col, hl_group)
   local opts = { end_row = line, end_col = 0, hl_mode = 'blend', hl_group = hl_group, priority = 999 }
-  local ns = vim.api.nvim_create_namespace('MiniOrgPicker')
   vim.api.nvim_buf_set_extmark(buf_id, ns, line - 1, start_col, opts)
 end
 
@@ -84,7 +85,7 @@ M.make_show = function(picker_opts)
 
     pick.default_show(buf_id, lines, query)
 
-    pcall(vim.api.nvim_buf_clear_namespace, buf_id, 'MiniOrgPicker', 0, -1)
+    vim.api.nvim_buf_clear_namespace(buf_id, ns, 0, -1)
     for _, section in ipairs(sections) do
       M.highlight_line_segment(buf_id, section.line, section.start_index, section.hl)
     end
