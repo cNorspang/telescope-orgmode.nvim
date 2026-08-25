@@ -20,6 +20,9 @@ local function get_adapter(name)
   local ok, adapter = pcall(require, 'telescope-orgmode.adapters.' .. requested)
 
   if not ok then
+    error(
+      string.format('Loading adapter failed with "%s"', adapter)
+    )
     local fallback_ok, fallback_adapter = pcall(require, 'telescope-orgmode.adapters.telescope')
     if fallback_ok then
       vim.notify(
